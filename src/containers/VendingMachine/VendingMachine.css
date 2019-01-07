@@ -1,0 +1,8 @@
+.VendingMachine {
+    text-align: center;
+    height: 700px;
+    width: 610px;
+    background-color:lightblue;
+    border: 1px solid eee;
+    box-shadow: 0 3px 5px teal;
+}

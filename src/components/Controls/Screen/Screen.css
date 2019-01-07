@@ -1,0 +1,9 @@
+.Screen {
+    display:inline-block;
+    margin: 2.5px;
+    background-color: lightgreen;
+    border-radius: 5px;
+    border: 1px solid black;
+    box-shadow: 0 1px 1px black;
+    text-align: right;
+}

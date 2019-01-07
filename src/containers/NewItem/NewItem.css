@@ -1,0 +1,18 @@
+.NewItem {
+    display: inline-block;
+    width: 200px;
+    text-align: left;
+    border: 1px solid black;
+    margin: 2.5px;
+}
+
+.NewItem label {
+    display: inline-block;
+    width: 50px;
+    border:none;
+}
+
+.NewItem input {
+    display: inline-block;
+    width: 125px;
+}

@@ -1,0 +1,14 @@
+.ControlsWrapper {
+    display: inline-block;
+}
+
+.Controls {
+    position: absolute;
+    left: 465px;
+    top: 200px;
+    background-color: rgb(241, 241, 241);
+    border-radius: 5px;
+    border: 1px solid rgb(136, 136, 136);
+    box-shadow: 0 1px 1px black;
+}
+
