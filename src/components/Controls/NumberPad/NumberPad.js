@@ -6,9 +6,9 @@ const numberPad = (props) => {
 
     const numbers = [];
     for (let i = 0; i < 10; i++) {
-        numbers.push(<span className={classes.Number} onClick={() => props.setSelection(i.toString())}>{i}</span>)
+        numbers.push(<span key={i} className={classes.Number} onClick={() => props.setSelection(i.toString())}>{i}</span>)
         if (i % 3 === 0) {
-            numbers.push(<br />)
+            numbers.push(<br key={'br'+i}/>)
         }
     }
 

@@ -1,7 +1,7 @@
 .NewItem {
     display: inline-block;
     width: 200px;
-    text-align: left;
+    text-align: center;
     border: 1px solid black;
     margin: 2.5px;
 }
@@ -15,4 +15,11 @@
 .NewItem input {
     display: inline-block;
     width: 125px;
+}
+
+.Error {
+    display: inline-block;
+    font-size: 10px;
+    color:red;
+    width:100px;
 }

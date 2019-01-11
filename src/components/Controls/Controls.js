@@ -3,28 +3,77 @@ import React, { Component } from 'react';
 import MoneySlot from './MoneySlot/MoneySlot';
 import NumberPad from './NumberPad/NumberPad';
 import Screen from './Screen/Screen';
+import Spinner from '../UI/Spinner/Spinner';
 
 import classes from './Controls.css';
 
 class Controls extends Component {
 
     state = {
-        display: "",
+        display: "$0",
         inputValue: "",
         balanceValue: 0,
     }
 
-    numberClickedHandler = (char) => {
-        this.setState((prevState, props) => {
-            return {
-                display: prevState.inputValue + char,
-                inputValue: prevState.inputValue + char
+    checkInput = () => {
+        console.log(this.state.inputValue);
+        const input = Number(this.state.inputValue);
+        console.log(input);
+        let price;
+        if (input >= 0 && input < this.props.items.length) {
+            price = this.props.items[input].price;
+        }
+        setTimeout(() => {
+            if (input < 0 || input >= this.props.items.length) {
+                this.setState({
+                    display: "invalid input"
+                })
+            } else if (this.state.balanceValue < price) {
+                this.setState({
+                    display: price
+                })
+            } else {
+                this.setState((prevState, props) => {
+                    return {
+                        display: "vending",
+                        balanceValue: prevState.balanceValue - price
+                    }
+                });
+                this.props.addToBalance(Number(price));
+
             }
-        })
-        if (this.state.inputValue.length === 3) {
-            this.setState({
-                display: char,
-                inputValue: char
+            setTimeout(() => {
+                this.setState({
+                    display: '$' + this.state.balanceValue,
+                    inputValue: ""
+                })
+            }, 2000);
+        }, 1000);
+
+
+    }
+
+
+    numberClickedHandler = (char) => {
+
+        if (this.state.inputValue.length > 2) {
+            return;
+        }
+
+        if (this.state.inputValue.length === 2) {
+            this.setState((prevState, props) => {
+                return {
+                    display: prevState.inputValue + char,
+                    inputValue: prevState.inputValue + char
+                }
+            }, this.checkInput);
+
+        } else {
+            this.setState((prevState, props) => {
+                return {
+                    display: prevState.inputValue + char,
+                    inputValue: prevState.inputValue + char
+                }
             })
         }
     }
