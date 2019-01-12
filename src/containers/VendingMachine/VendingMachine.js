@@ -15,6 +15,11 @@ class VendingMachine extends Component {
         items: [],
     }
 
+    componentDidMount() {
+        this.getItems();
+        this.getBalance();
+    }
+
     getItems = () => {
         axios.get('items.json')
             .then(response => {
@@ -33,11 +38,6 @@ class VendingMachine extends Component {
                     this.setState({ balance: response.data.balance });
                 }
             })
-    }
-
-    componentDidMount() {
-        this.getItems();
-        this.getBalance();
     }
 
     addToBalanceHandler = (amount) => {
@@ -85,12 +85,69 @@ class VendingMachine extends Component {
         this.addToBalanceHandler(this.state.items[code].price)
     }
 
+    switchItemsHandler = (first, second) => {
+        if (first >= this.state.items.length || second >= this.state.items.length) {
+            return;
+        }
+        let newItems = [...this.state.items];
+        let temp = newItems[first];
+        newItems[first] = newItems[second];
+        newItems[second] = temp;
+        this.updateItemsHandler(newItems);
+    }
+
+    changePositionHandler = (function (t) {
+        let exp = {};
+
+        let firstTop = 15;
+        let firstLeft = 15;
+        let itemHeight = 150;
+        let itemWidth = 125;
+        let xPos;
+        let yPos;
+        let xItem;
+        let yItem;
+        let xItemDrop;
+        let yItemDrop;
+        let firstPos;
+        let lastPos;
+
+        let moved = (e) => {
+            if (e.buttons === 0) {
+                e.target.parentNode.parentNode.removeEventListener('mousemove', moved);
+                let xDrop = e.clientX;
+                let yDrop = e.clientY;
+                yItemDrop = Math.floor((yDrop - firstTop) / (itemHeight + 30));
+                xItemDrop = Math.floor((xDrop - firstLeft) / (itemWidth + 30));
+                lastPos = (xItemDrop + yItemDrop * 3);
+                if (lastPos >= t.state.items.length) {
+                    return false;
+                }
+                t.switchItemsHandler(firstPos, lastPos);
+
+            }
+        }
+
+        let click = (e) => {
+            if (e.button === 0) {
+                e.target.parentNode.parentNode.addEventListener('mousemove', moved);
+                xPos = e.clientX;
+                yPos = e.clientY;
+                xItem = Math.floor((xPos - firstTop) / (itemWidth + 30));
+                yItem = Math.floor((yPos - firstLeft) / (itemHeight + 30));
+                firstPos = xItem + (yItem * 3);
+            }
+        }
+
+        exp.click = click;
+        return exp;
+    }(this));
 
     render() {
 
         return (
             <div className={classes.VendingMachine}>
-                <VendingItems deleteItem={this.deleteItemHandler} items={this.state.items} />
+                <VendingItems changePos={this.changePositionHandler} deleteItem={this.deleteItemHandler} items={this.state.items} />
                 <div>
                     <BalanceCounter balance={this.state.balance} withdrawBalance={this.withdrawBalanceHandler} />
                     <Controls

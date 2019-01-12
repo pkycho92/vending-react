@@ -17,7 +17,7 @@ const vendingItems = (props) => {
 
 
     return (
-        <div className={classes.VendingItemsWrapper}>
+        <div onMouseDown={props.changePos.click} className={classes.VendingItemsWrapper}>
             <div className={classes.VendingItems}>{items}</div>
         </div>
     )

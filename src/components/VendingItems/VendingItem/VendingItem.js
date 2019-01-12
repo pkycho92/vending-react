@@ -11,7 +11,7 @@ const vendingItem = (props) => {
             <CloseButton deleteItem={props.deleteItem}/>
             <div className={classes.VendingItemPosition}>{props.position}</div>
             <div className={classes.VendingItemPrice} >{props.price}</div>
-            <img className={classes.VendingItemImage} src={props.image} alt="" />
+            <img className={classes.VendingItemImage} src={props.image} alt="" draggable="false" />
         </div>
     )
 };
