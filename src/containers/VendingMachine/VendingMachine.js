@@ -1,99 +1,52 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import VendingItems from '../../components/VendingItems/VendingItems';
 import Controls from '../../components/Controls/Controls';
 import classes from './VendingMachine.css';
 import NewItem from '../NewItem/NewItem';
 import BalanceCounter from '../../components/BalanceCounter/BalanceCounter';
-import Spinner from '../../components/UI/Spinner/Spinner';
 
-import axios from '../../axios-vending'
+import * as actionCreators from '../../store/actions/actionCreators';
 
 class VendingMachine extends Component {
-    state = {
-        balance: "",
-        items: [],
-    }
 
     componentDidMount() {
-        this.getItems();
-        this.getBalance();
-    }
-
-    getItems = () => {
-        axios.get('items.json')
-            .then(response => {
-                if (response.data) {
-                    console.log(response.data);
-                    this.setState({ items: Object.values(response.data.items) });
-                }
-            })
-
-    }
-
-    getBalance = () => {
-        axios.get('balance.json')
-            .then(response => {
-                if (response.data) {
-                    this.setState({ balance: response.data.balance });
-                }
-            })
-    }
-
-    addToBalanceHandler = (amount) => {
-        axios.put('balance.json', { balance: Number(this.state.balance) + amount })
-            .then(response => {
-                this.setState({ balance: response.data.balance });
-            })
-    }
-
-    withdrawBalanceHandler = () => {
-        axios.put('balance.json', { balance: 0 })
-            .then(response => {
-                this.setState({ balance: response.data.balance });
-            })
-    }
-
-    updateItemsHandler = (items) => {
-        axios.put('items.json', { items: items })
-            .then(response => {
-                if (response.data) {
-                    this.setState({ items: response.data.items });
-                } else {
-                    this.setState({ items: [] })
-                }
-            })
+        this.props.getItems();
+        this.props.getBalance();
     }
 
     addItemHandler = (newItem) => {
-        let newItems = [...this.state.items];
+        let newItems = [...this.props.items];
         newItems.push(newItem);
-        this.updateItemsHandler(newItems);
+        this.props.updateItems(newItems);
     }
 
-    deleteItemHandler = (pos) => {
-
-        let newItems = [...this.state.items];
+    deleteItemHandler = (e, pos) => {
+        let newItems = [...this.props.items];
         newItems.splice(pos, 1);
         for (let i = pos; i < newItems.length; i++) {
             newItems[i].position = i;
         }
-        this.updateItemsHandler(newItems);
+        this.props.updateItems(newItems);
     }
 
     setSelectionHandler = (code) => {
-        this.addToBalanceHandler(this.state.items[code].price)
+        this.props.addBalance(this.props.items[code].price)
     }
 
     switchItemsHandler = (first, second) => {
-        if (first >= this.state.items.length || second >= this.state.items.length) {
+        if (first >= this.props.items.length || second >= this.props.items.length) {
             return;
         }
-        let newItems = [...this.state.items];
+        console.log(first, second);
+        let newItems = [...this.props.items];
         let temp = newItems[first];
         newItems[first] = newItems[second];
+        newItems[first].position = second;
         newItems[second] = temp;
-        this.updateItemsHandler(newItems);
+        newItems[second].position = first;
+        this.props.updateItems(newItems);
     }
 
     changePositionHandler = (function (t) {
@@ -120,7 +73,7 @@ class VendingMachine extends Component {
                 yItemDrop = Math.floor((yDrop - firstTop) / (itemHeight + 30));
                 xItemDrop = Math.floor((xDrop - firstLeft) / (itemWidth + 30));
                 lastPos = (xItemDrop + yItemDrop * 3);
-                if (lastPos >= t.state.items.length) {
+                if (lastPos >= t.props.items.length) {
                     return false;
                 }
                 t.switchItemsHandler(firstPos, lastPos);
@@ -130,6 +83,9 @@ class VendingMachine extends Component {
 
         let click = (e) => {
             if (e.button === 0) {
+                if (e.target.classList.contains("close")) {
+                    return false;
+                }
                 e.target.parentNode.parentNode.addEventListener('mousemove', moved);
                 xPos = e.clientX;
                 yPos = e.clientY;
@@ -147,18 +103,35 @@ class VendingMachine extends Component {
 
         return (
             <div className={classes.VendingMachine}>
-                <VendingItems changePos={this.changePositionHandler} deleteItem={this.deleteItemHandler} items={this.state.items} />
+                <VendingItems changePos={this.changePositionHandler} deleteItem={this.deleteItemHandler} items={this.props.items} />
                 <div>
-                    <BalanceCounter balance={this.state.balance} withdrawBalance={this.withdrawBalanceHandler} />
+                    <BalanceCounter balance={this.props.balance} withdrawBalance={this.props.withdrawBalance} />
                     <Controls
-                        items={this.state.items}
-                        addToBalance={this.addToBalanceHandler} />
+                        items={this.props.items}
+                        addToBalance={this.props.addBalance} />
                 </div>
 
-                <NewItem items={this.state.items} updateItems={this.getItems} addItem={this.addItemHandler} />
+                <NewItem items={this.props.items} addItem={this.addItemHandler} />
             </div>
         )
     }
 }
 
-export default VendingMachine;
+const mapStateToProps = state => {
+    return {
+        balance: state.balance,
+        items: state.items
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        getItems: () => dispatch(actionCreators.getItems()),
+        updateItems: (items) => dispatch(actionCreators.updateItems(items)),
+        getBalance: () => dispatch(actionCreators.getBalance()),
+        addBalance: (balance) => dispatch(actionCreators.addBalance(balance)),
+        withdrawBalance: () => dispatch(actionCreators.withdrawBalance())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(VendingMachine);

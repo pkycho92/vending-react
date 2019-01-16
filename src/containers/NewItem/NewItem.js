@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from '../../axios-vending';
 import classes from './NewItem.css';
 
 class NewItem extends Component {

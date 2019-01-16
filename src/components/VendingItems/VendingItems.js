@@ -10,7 +10,7 @@ const vendingItems = (props) => {
     if (props.items.length) {
         items = props.items.map((item) => {
             return <VendingItem key={item.position} name={item.name} position={item.position} price={item.price} image={item.image}
-                deleteItem={() => { props.deleteItem(item.position) }} />
+                deleteItem={(e) => { props.deleteItem(e, item.position) }} />
         });
     }
 
