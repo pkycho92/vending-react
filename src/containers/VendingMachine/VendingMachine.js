@@ -32,21 +32,22 @@ class VendingMachine extends Component {
     }
 
     setSelectionHandler = (code) => {
-        this.props.addBalance(this.props.items[code].price)
+        this.props.addBalance(this.props.items[code].price);
     }
 
     switchItemsHandler = (first, second) => {
         if (first >= this.props.items.length || second >= this.props.items.length) {
             return;
         }
-        console.log(first, second);
+        console.log("shold be differ", first, second);
         let newItems = [...this.props.items];
         let temp = newItems[first];
         newItems[first] = newItems[second];
-        newItems[first].position = second;
+        newItems[first].position = first;
         newItems[second] = temp;
-        newItems[second].position = first;
+        newItems[second].position = second;
         this.props.updateItems(newItems);
+        console.log(newItems[first].position, newItems[second].position);
     }
 
     changePositionHandler = (function (t) {
@@ -108,7 +109,7 @@ class VendingMachine extends Component {
                     <BalanceCounter balance={this.props.balance} withdrawBalance={this.props.withdrawBalance} />
                     <Controls
                         items={this.props.items}
-                        addToBalance={this.props.addBalance} />
+                        addToBalance={(amount) => this.props.addBalance(this.props.balance, amount)} />
                 </div>
 
                 <NewItem items={this.props.items} addItem={this.addItemHandler} />
@@ -129,7 +130,7 @@ const mapDispatchToProps = dispatch => {
         getItems: () => dispatch(actionCreators.getItems()),
         updateItems: (items) => dispatch(actionCreators.updateItems(items)),
         getBalance: () => dispatch(actionCreators.getBalance()),
-        addBalance: (balance) => dispatch(actionCreators.addBalance(balance)),
+        addBalance: (balance, amount) => dispatch(actionCreators.addBalance(balance, amount)),
         withdrawBalance: () => dispatch(actionCreators.withdrawBalance())
     }
 }

@@ -74,9 +74,9 @@ export const getBalance = () => {
     };
 }
 
-export const addBalance = (balance) => {
+export const addBalance = (balance, amount) => {
     return dispatch => {
-        axios.put('balance.json', { balance: Number(this.props.balance) + balance })
+        axios.put('balance.json', { balance: +balance + amount })
             .then(response => {
                 dispatch(addBalanceSync(response.data.balance));
             });
