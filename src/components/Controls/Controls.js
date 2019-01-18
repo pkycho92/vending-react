@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import MoneySlot from './MoneySlot/MoneySlot';
 import NumberPad from './NumberPad/NumberPad';
 import Screen from './Screen/Screen';
-import Spinner from '../UI/Spinner/Spinner';
 
 import classes from './Controls.css';
 
@@ -16,15 +15,20 @@ class Controls extends Component {
     }
 
     checkInput = () => {
-        console.log(this.state.inputValue);
         const input = Number(this.state.inputValue);
-        console.log(input);
         let price;
         if (input >= 0 && input < this.props.items.length) {
             price = this.props.items[input].price;
         }
         setTimeout(() => {
-            if (input < 0 || input >= this.props.items.length) {
+            if (input === 999) {
+                if (this.props.isAuth) {
+                    this.props.authOffControl()
+                } else {
+                    this.props.authOnControl();
+                }
+            }
+            else if (input < 0 || input >= this.props.items.length) {
                 this.setState({
                     display: "invalid input"
                 })

@@ -5,3 +5,5 @@ export const GET_BALANCE = "GET_BALANCE";
 export const ADD_BALANCE = "ADD_BALANCE";
 export const WITHDRAW_BALANCE = "WITHDRAW_BALANCE";
 
+export const AUTH_ON = "AUTH_ON";
+export const AUTH_OFF = "AUTH_OFF";

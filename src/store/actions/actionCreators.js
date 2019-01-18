@@ -91,3 +91,23 @@ export const withdrawBalance = () => {
             })
     };
 }
+
+export const authOn = () => {
+    return dispatch => {
+        dispatch(
+            {
+                type: actionTypes.AUTH_ON
+            }
+        )
+    }
+}
+
+export const authOff = () => {
+    return dispatch => {
+        dispatch(
+            {
+                type: actionTypes.AUTH_OFF
+            }
+        )
+    }
+}

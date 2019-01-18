@@ -101,18 +101,19 @@ class VendingMachine extends Component {
     }(this));
 
     render() {
-
         return (
             <div className={classes.VendingMachine}>
                 <VendingItems changePos={this.changePositionHandler} deleteItem={this.deleteItemHandler} items={this.props.items} />
                 <div>
-                    <BalanceCounter balance={this.props.balance} withdrawBalance={this.props.withdrawBalance} />
+                    {this.props.isAuth ? <BalanceCounter balance={this.props.balance} withdrawBalance={this.props.withdrawBalance} /> : null}
                     <Controls
                         items={this.props.items}
-                        addToBalance={(amount) => this.props.addBalance(this.props.balance, amount)} />
+                        addToBalance={(amount) => this.props.addBalance(this.props.balance, amount)}
+                        isAuth={this.props.isAuth}
+                        authOnControl={this.props.authOn}
+                        authOffControl={this.props.authOff} />
                 </div>
-
-                <NewItem items={this.props.items} addItem={this.addItemHandler} />
+                {this.props.isAuth ? <NewItem items={this.props.items} addItem={this.addItemHandler} /> : null}
             </div>
         )
     }
@@ -121,7 +122,8 @@ class VendingMachine extends Component {
 const mapStateToProps = state => {
     return {
         balance: state.balance,
-        items: state.items
+        items: state.items,
+        isAuth: state.isAuth
     };
 };
 
@@ -131,7 +133,9 @@ const mapDispatchToProps = dispatch => {
         updateItems: (items) => dispatch(actionCreators.updateItems(items)),
         getBalance: () => dispatch(actionCreators.getBalance()),
         addBalance: (balance, amount) => dispatch(actionCreators.addBalance(balance, amount)),
-        withdrawBalance: () => dispatch(actionCreators.withdrawBalance())
+        withdrawBalance: () => dispatch(actionCreators.withdrawBalance()),
+        authOn: () => dispatch(actionCreators.authOn()),
+        authOff: () => dispatch(actionCreators.authOff())
     }
 }
 

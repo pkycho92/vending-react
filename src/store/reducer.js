@@ -3,7 +3,8 @@ import { updateObject } from './utility';
 
 const initialState = {
     balance: "",
-    items: []
+    items: [],
+    isAuth: false
 };
 
 const reducer = (state = initialState, action) => {
@@ -27,6 +28,15 @@ const reducer = (state = initialState, action) => {
         case actionTypes.WITHDRAW_BALANCE:
             return updateObject(state, {
                 balance: action.balance
+            });
+        case actionTypes.AUTH_ON:
+            console.log('hg');
+            return updateObject(state, {
+                isAuth: true
+            });
+        case actionTypes.AUTH_OFF:
+            return updateObject(state, {
+                isAuth: false
             });
         default:
             return state;
