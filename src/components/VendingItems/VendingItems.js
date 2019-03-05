@@ -9,7 +9,7 @@ const vendingItems = (props) => {
 
     if (props.items.length) {
         items = props.items.map((item) => {
-            return <VendingItem key={item.position} name={item.name} position={item.position} price={item.price} image={item.image}
+            return <VendingItem key={item.position} name={item.name} position={item.position} price={item.price} image={item.image} auth={props.isAuth}
                 deleteItem={(e) => { props.deleteItem(e, item.position) }} />
         });
     }
@@ -17,7 +17,7 @@ const vendingItems = (props) => {
 
 
     return (
-        <div onMouseDown={props.changePos.click} className={classes.VendingItemsWrapper}>
+        <div onMouseDown={props.isAuth ? props.changePos.click : null} className={classes.VendingItemsWrapper}>
             <div className={classes.VendingItems}>{items}</div>
         </div>
     )

@@ -103,7 +103,7 @@ class VendingMachine extends Component {
     render() {
         return (
             <div className={classes.VendingMachine}>
-                <VendingItems changePos={this.changePositionHandler} deleteItem={this.deleteItemHandler} items={this.props.items} />
+                <VendingItems changePos={this.changePositionHandler} deleteItem={this.deleteItemHandler} items={this.props.items} isAuth={this.props.isAuth}/>
                 <div>
                     {this.props.isAuth ? <BalanceCounter balance={this.props.balance} withdrawBalance={this.props.withdrawBalance} /> : null}
                     <Controls

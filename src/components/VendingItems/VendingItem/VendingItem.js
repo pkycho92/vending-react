@@ -8,7 +8,7 @@ const vendingItem = (props) => {
 
         <div className={classes.VendingItem}>
             <div className={classes.VendingItemName} >{props.name}</div>
-            <CloseButton deleteItem={props.deleteItem}/>
+            {props.auth ? <CloseButton deleteItem={props.deleteItem}/> : null}
             <div className={classes.VendingItemPosition}>{props.position}</div>
             <div className={classes.VendingItemPrice} >{props.price}</div>
             <img className={classes.VendingItemImage} src={props.image} alt="" draggable="false" />
